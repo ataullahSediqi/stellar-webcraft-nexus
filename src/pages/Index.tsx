@@ -11,6 +11,8 @@ import { ContactForm } from '@/components/ContactForm';
 import { Footer } from '@/components/Footer';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { useToast } from '@/components/ui/use-toast';
+import { Pricing } from '@/components/Pricing';
+import { Map } from '@/components/Map';
 
 const Index = () => {
   const { toast } = useToast();
@@ -48,6 +50,8 @@ const Index = () => {
         <Services />
         <WhyChooseUs />
         <Portfolio />
+        <Pricing />
+        <Map />
         <Blog />
         <Testimonials />
         <ContactForm />

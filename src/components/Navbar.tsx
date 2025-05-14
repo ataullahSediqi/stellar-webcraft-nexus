@@ -10,6 +10,8 @@ const navItems = [
   { label: 'Services', target: 'services' },
   { label: 'Why Us', target: 'why-choose-us' },
   { label: 'Portfolio', target: 'portfolio' },
+  { label: 'Pricing', target: 'pricing' },
+  { label: 'Locations', target: 'map' },
   { label: 'Blog', target: 'blog' },
   { label: 'Testimonials', target: 'testimonials' },
   { label: 'Contact', target: 'contact' },
