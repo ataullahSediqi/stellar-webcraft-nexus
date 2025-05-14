@@ -1,12 +1,58 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState, useEffect } from 'react';
+import { Navbar } from '@/components/Navbar';
+import { Hero } from '@/components/Hero';
+import { Services } from '@/components/Services';
+import { WhyChooseUs } from '@/components/WhyChooseUs';
+import { Portfolio } from '@/components/Portfolio';
+import { Testimonials } from '@/components/Testimonials';
+import { ContactForm } from '@/components/ContactForm';
+import { Footer } from '@/components/Footer';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
+import { useToast } from '@/components/ui/use-toast';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial page loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      toast({
+        title: "Welcome to DevMatrix",
+        description: "Innovative software solutions for your business.",
+      });
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="text-2xl font-bold">
+          <span className="text-primary">Dev</span>Matrix
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      
+      <main className="flex-grow">
+        <Hero />
+        <Services />
+        <WhyChooseUs />
+        <Portfolio />
+        <Testimonials />
+        <ContactForm />
+      </main>
+      
+      <Footer />
+      <FloatingActionButton />
     </div>
   );
 };
