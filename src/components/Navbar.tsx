@@ -10,6 +10,7 @@ const navItems = [
   { label: 'Services', target: 'services' },
   { label: 'Why Us', target: 'why-choose-us' },
   { label: 'Portfolio', target: 'portfolio' },
+  { label: 'Blog', target: 'blog' },
   { label: 'Testimonials', target: 'testimonials' },
   { label: 'Contact', target: 'contact' },
 ];
@@ -102,13 +103,13 @@ export function Navbar() {
       <div
         className="progress-bar"
         style={{
-          scaleX: isScrolled
-            ? Math.min(
+          transform: isScrolled
+            ? `scaleX(${Math.min(
                 window.scrollY /
                   (document.documentElement.scrollHeight - window.innerHeight),
                 1
-              )
-            : 0,
+              )})`
+            : 'scaleX(0)',
         }}
       />
     </header>
