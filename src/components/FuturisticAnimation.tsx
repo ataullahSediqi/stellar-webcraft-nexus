@@ -1,10 +1,13 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function FuturisticAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particles: Particle[] = [];
   const particleCount = 100;
+  const [typedCode, setTypedCode] = useState('');
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
   
   interface Particle {
     x: number;
@@ -15,6 +18,35 @@ export function FuturisticAnimation() {
     color: string;
     alpha: number;
   }
+
+  const codeSnippet = [
+    `import { useState, useEffect } from 'react';`,
+    ``,
+    `function ByteRender() {`,
+    `  const [isLoading, setIsLoading] = useState(true);`,
+    `  const [data, setData] = useState([]);`,
+    ``,
+    `  useEffect(() => {`,
+    `    async function fetchData() {`,
+    `      const response = await api.get('/future');`,
+    `      setData(response.data);`,
+    `      setIsLoading(false);`,
+    `    }`,
+    `    `,
+    `    fetchData();`,
+    `  }, []);`,
+    ``,
+    `  return (`,
+    `    <div className="future-code">`,
+    `      {isLoading ? (`,
+    `        <Loader />`,
+    `      ) : (`,
+    `        <FuturisticUI data={data} />`,
+    `      )}`,
+    `    </div>`,
+    `  );`,
+    `}`
+  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -111,44 +143,68 @@ export function FuturisticAnimation() {
     };
   }, []);
 
+  // Typing effect
+  useEffect(() => {
+    if (currentLineIndex >= codeSnippet.length) return;
+    
+    const line = codeSnippet[currentLineIndex];
+    
+    const typingInterval = setInterval(() => {
+      if (currentCharIndex < line.length) {
+        setTypedCode(prev => prev + line[currentCharIndex]);
+        setCurrentCharIndex(prev => prev + 1);
+      } else {
+        setTypedCode(prev => prev + '\n');
+        setCurrentLineIndex(prev => prev + 1);
+        setCurrentCharIndex(0);
+        clearInterval(typingInterval);
+      }
+    }, 50);
+    
+    return () => clearInterval(typingInterval);
+  }, [currentLineIndex, currentCharIndex, codeSnippet]);
+
+  // Syntax highlighting function
+  const renderHighlightedCode = () => {
+    if (!typedCode) return null;
+    
+    return typedCode.split('\n').map((line, index) => {
+      // Replace keywords with colored spans
+      let highlightedLine = line
+        .replace(/import|from|function|const|let|var|return|async|await/g, 
+          match => `<span class="text-[#ff7733]">${match}</span>`)
+        .replace(/useState|useEffect/g, 
+          match => `<span class="text-[#36f9f6]">${match}</span>`)
+        .replace(/("|'|`).*?("|'|`)/g, 
+          match => `<span class="text-[#c2d94c]">${match}</span>`)
+        .replace(/\{|\}|\(|\)|\[|\]/g, 
+          match => `<span class="text-[#e7c547]">${match}</span>`)
+        .replace(/<.*?>/g, 
+          match => `<span class="text-[#39bae6]">${match}</span>`);
+      
+      return (
+        <div key={index} className="whitespace-pre">
+          <span className="text-[#4d5566] mr-2">{(index + 1).toString().padStart(2, '0')}</span>
+          <span dangerouslySetInnerHTML={{ __html: highlightedLine || '&nbsp;' }} />
+        </div>
+      );
+    });
+  };
+
   return (
     <div className="relative w-[500px] h-[500px] mx-auto">
       {/* Code Container */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div className="bg-background/20 backdrop-blur-md rounded-3xl border border-primary/20 p-8 w-full h-full max-w-md overflow-hidden">
+        <div className="bg-[#0d1017] backdrop-blur-md rounded-3xl border border-[#1f2430]/40 p-8 w-full h-full max-w-md overflow-hidden">
           <div className="flex items-center mb-4">
             <div className="h-3 w-3 rounded-full bg-red-500 mr-2"></div>
             <div className="h-3 w-3 rounded-full bg-yellow-500 mr-2"></div>
             <div className="h-3 w-3 rounded-full bg-green-500"></div>
           </div>
-          <pre className="text-left font-mono text-xs md:text-sm text-primary/70 overflow-hidden">
-            <code>
-              {`import { useState, useEffect } from 'react';
-              
-function DevMatrix() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await api.get('/future');
-      setData(response.data);
-      setIsLoading(false);
-    }
-    
-    fetchData();
-  }, []);
-
-  return (
-    <div className="future-code">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <FuturisticUI data={data} />
-      )}
-    </div>
-  );
-}`}
+          <pre className="text-left font-mono text-xs md:text-sm text-[#cbccc6] overflow-hidden h-[calc(100%-2rem)] overflow-y-auto">
+            <code className="language-javascript">
+              {renderHighlightedCode()}
+              <span className="animate-pulse">|</span>
             </code>
           </pre>
         </div>

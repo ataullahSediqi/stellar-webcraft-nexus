@@ -23,7 +23,7 @@ const Index = () => {
     const timer = setTimeout(() => {
       setIsLoading(false);
       toast({
-        title: "Welcome to DevMatrix",
+        title: "Welcome to ByteRender",
         description: "Innovative software solutions for your business.",
       });
     }, 800);
@@ -35,7 +35,7 @@ const Index = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="text-2xl font-bold">
-          <span className="text-primary">Dev</span>Matrix
+          <span className="text-primary">Byte</span>Render
         </div>
       </div>
     );

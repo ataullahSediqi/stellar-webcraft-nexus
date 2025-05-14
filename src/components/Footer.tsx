@@ -67,7 +67,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <a href="#" className="inline-block">
               <div className="flex items-center font-bold text-2xl">
-                <span className="text-primary">Dev</span>Matrix
+                <span className="text-primary">Byte</span>Render
               </div>
             </a>
             
@@ -111,7 +111,7 @@ export function Footer() {
 
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} DevMatrix Software. All rights reserved.
+            &copy; {new Date().getFullYear()} ByteRender Software. All rights reserved.
           </p>
           
           <div className="flex gap-6">

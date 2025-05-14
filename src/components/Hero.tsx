@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { ArrowRight, Code, Zap, Layers } from 'lucide-react';
@@ -8,6 +8,17 @@ import { FuturisticAnimation } from './FuturisticAnimation';
 export function Hero() {
   const scrollTo = useScrollTo();
   const backgroundRef = useRef<SVGSVGElement>(null);
+  
+  // For the animated stats
+  const [yearsCount, setYearsCount] = useState(0);
+  const [projectsCount, setProjectsCount] = useState(0);
+  const [satisfactionCount, setSatisfactionCount] = useState(0);
+  
+  const finalStats = {
+    years: 10,
+    projects: 200,
+    satisfaction: 99
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +31,42 @@ export function Hero() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Stats counter animation
+  useEffect(() => {
+    // Animate years count
+    const yearsTimer = setInterval(() => {
+      setYearsCount(prev => {
+        if (prev < finalStats.years) return prev + 1;
+        clearInterval(yearsTimer);
+        return prev;
+      });
+    }, 200);
+    
+    // Animate projects count
+    const projectsTimer = setInterval(() => {
+      setProjectsCount(prev => {
+        if (prev < finalStats.projects) return prev + Math.ceil(finalStats.projects / 20);
+        clearInterval(projectsTimer);
+        return finalStats.projects;
+      });
+    }, 100);
+    
+    // Animate satisfaction count
+    const satisfactionTimer = setInterval(() => {
+      setSatisfactionCount(prev => {
+        if (prev < finalStats.satisfaction) return prev + 3;
+        clearInterval(satisfactionTimer);
+        return finalStats.satisfaction;
+      });
+    }, 100);
+    
+    return () => {
+      clearInterval(yearsTimer);
+      clearInterval(projectsTimer);
+      clearInterval(satisfactionTimer);
+    };
   }, []);
 
   return (
@@ -85,13 +132,15 @@ export function Hero() {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-20 max-w-4xl w-full">
           {[
-            { value: '10+', label: 'Years Experience', icon: <Layers className="w-5 h-5 text-primary mb-1" /> },
-            { value: '200+', label: 'Projects Delivered', icon: <Code className="w-5 h-5 text-primary mb-1" /> },
-            { value: '99%', label: 'Client Satisfaction', icon: <Zap className="w-5 h-5 text-primary mb-1" /> }
+            { value: yearsCount, suffix: '+', label: 'Years Experience', icon: <Layers className="w-5 h-5 text-primary mb-1" /> },
+            { value: projectsCount, suffix: '+', label: 'Projects Delivered', icon: <Code className="w-5 h-5 text-primary mb-1" /> },
+            { value: satisfactionCount, suffix: '%', label: 'Client Satisfaction', icon: <Zap className="w-5 h-5 text-primary mb-1" /> }
           ].map((stat, i) => (
-            <div key={i} className="flex flex-col items-center p-4 rounded-xl bg-background/50 backdrop-blur-sm border border-border/30 hover:border-primary/20 transition-all duration-300">
+            <div key={i} className="flex flex-col items-center p-4 rounded-xl bg-background/50 backdrop-blur-sm border border-border/30 hover:border-primary/20 transition-all duration-300 neo-box-hover">
               <div>{stat.icon}</div>
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-1">{stat.value}</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary mb-1">
+                {stat.value}{stat.suffix}
+              </div>
               <div className="text-muted-foreground">{stat.label}</div>
             </div>
           ))}
