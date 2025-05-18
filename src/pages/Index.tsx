@@ -52,15 +52,15 @@ const Index = () => {
         <Portfolio />
         <Pricing />
         <Map />
-        <Blog />
         <Testimonials />
         <ContactForm />
+        <Blog />
       </main>
       
       <Footer />
       <FloatingActionButton />
     </div>
   );
-};
+}
 
 export default Index;

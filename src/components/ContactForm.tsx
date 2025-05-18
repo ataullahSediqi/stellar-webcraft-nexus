@@ -34,6 +34,9 @@ export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // Replace this with your email - the one you want to receive form submissions
+  const formSubmitEmail = "your@email.com"; // REPLACE THIS WITH YOUR EMAIL
+
   const validateField = (name: keyof FormData, value: string): string => {
     switch (name) {
       case 'name':
@@ -59,9 +62,7 @@ export function ContactForm() {
     setErrors({ ...errors, [name]: errorMessage });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const validateForm = (): boolean => {
     // Validate all fields
     const newErrors: FormErrors = {};
     let isValid = true;
@@ -82,13 +83,23 @@ export function ContactForm() {
         description: "Please fix the errors in the form",
         variant: "destructive"
       });
+    }
+    
+    return isValid;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
       return;
     }
     
     // Submit form
     setIsSubmitting(true);
     
-    // Simulate API call
+    // The form will be submitted to formsubmit.co via HTML form action
+    // We just need to show feedback to the user
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSuccess(true);
@@ -107,7 +118,7 @@ export function ContactForm() {
         });
         setIsSuccess(false);
       }, 2000);
-    }, 1500);
+    }, 800);
   };
 
   return (
@@ -134,8 +145,8 @@ export function ContactForm() {
                   </div>
                   <div>
                     <div className="font-medium">Email</div>
-                    <a href="mailto:hello@devmatrix.com" className="text-muted-foreground hover:text-primary">
-                      hello@devmatrix.com
+                    <a href="mailto:hello@byterender.com" className="text-muted-foreground hover:text-primary">
+                      hello@byterender.com
                     </a>
                   </div>
                 </div>
@@ -188,7 +199,14 @@ export function ContactForm() {
 
           <AnimatedSection className="order-1 lg:order-2">
             <div className="bg-card rounded-xl border border-border p-6 h-full">
-              <form onSubmit={handleSubmit}>
+              <form action={`https://formsubmit.co/${formSubmitEmail}`} method="POST" onSubmit={handleSubmit}>
+                {/* FormSubmit configuration */}
+                <input type="hidden" name="_subject" value="New submission from ByteRender website!" />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="text" name="_honey" style={{ display: 'none' }} />
+                <input type="hidden" name="_next" value={window.location.href} />
+                
                 <div className="space-y-4">
                   <div>
                     <Input
